@@ -1,13 +1,20 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from dotenv import load_dotenv
+import os
 import requests
 
 app = Flask(__name__)
 CORS(app)
 
+load_dotenv()
+
 @app.route('/api/flight_data', methods=['GET'])
 def get_flight_data():
-    api_url = "http://api.aviationstack.com/v1/flights?access_key=4a5fe6cb7eeeef3777ad1cd30cea2b62"
+    api_key = os.getenv("API_KEY")
+    print(api_key)
+    api_url = f"http://api.aviationstack.com/v1/flights?access_key={api_key}"
+    print(api_url)
     
     response = requests.get(api_url)
 
