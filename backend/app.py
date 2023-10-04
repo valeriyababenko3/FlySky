@@ -4,8 +4,14 @@ import psycopg2.extras
 import re
 from werkzeug.security import generate_password_hash, check_password_hash
 from decouple import config
+from flask_cors import CORS
+from api.flight_requests import flight_requests
 
 app = Flask(__name__)
+
+app.register_blueprint(flight_requests, url_prefix='/api/flights')
+
+CORS(app)
 app.secret_key = config('app.secret_key')
 
 DB_HOST = config('DB_HOST')
