@@ -1,15 +1,12 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+from flask import jsonify, Blueprint
 from dotenv import load_dotenv
 import os
 import requests
 
-app = Flask(__name__)
-CORS(app)
+flight_requests = Blueprint('flights', __name__)
 
 load_dotenv()
-
-@app.route('/api/flight_data', methods=['GET'])
+@flight_requests.route('/api/flight_data', methods=['GET'])
 def get_flight_data():
     api_key = os.getenv("API_KEY")
     print(api_key)
@@ -25,6 +22,3 @@ def get_flight_data():
         print(f'{response.status_code}')
         print(response.text)
         return jsonify({"error": "Fail"})
-
-if __name__ == '__main__':
-    app.run(debug=True)
