@@ -3,4 +3,8 @@ pip3 install psycopg2
 pip3 install psycopg2-binary  # Use psycopg2-binary for easier installation
 pip3 install Werkzeug
 pip3 install python-decouple
+pip3 install flask_cors
+pip3 install python-dotenv
+pip3 install requests
+
 
