@@ -18,6 +18,7 @@ flight_requests = Blueprint('flights', __name__)
 
 load_dotenv()
 
+@flight_requests.route('/api_data', methods=['GET'])
 def get_flight_data():
     if request.method == 'GET':
         api_key = os.getenv("API_KEY")

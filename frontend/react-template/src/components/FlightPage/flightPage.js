@@ -8,7 +8,7 @@ function FlightData() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const flightResponse = await fetch('http://localhost:5000/api/saved_flight_data');
+        const flightResponse = await fetch('http://localhost:5000/api/flights');
         if (!flightResponse.ok) {
           throw new Error(`HTTP error! Status: ${flightResponse.status}`);
         }
