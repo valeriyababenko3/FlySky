@@ -5,12 +5,17 @@ import re
 from werkzeug.security import generate_password_hash, check_password_hash
 from decouple import config
 from flask_cors import CORS, cross_origin  # Import cross_origin
-
-app = Flask(__name__)
+from api.flight_requests import flight_requests
+from api.weather_requests import weather_requests
 
 # Allow cross-origin requests
+
+
+app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
+app.register_blueprint(flight_requests, url_prefix='/api/flights')
+app.register_blueprint(weather_requests)
 
 app.secret_key = config('app.secret_key')
 
@@ -22,7 +27,6 @@ DB_PASS = config('DB_PASS')
 # PostgreSQL connection
 conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER,
                         password=DB_PASS, host=DB_HOST)
-
 
 @app.route('/')
 def home():

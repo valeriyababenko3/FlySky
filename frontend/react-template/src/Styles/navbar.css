@@ -1,0 +1,69 @@
+.topnav {
+    background-color: #10109d;
+    width: 100%;
+    height: 60px;
+    color: white;
+}
+
+.topnav-container {
+    width: 95%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.topnav-icons {
+    display: flex;
+    width: 200px;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.dropdown-menu-btn {
+    font-size: 20px;
+    display: flex;
+    background-color: transparent;
+    color: white;
+    width: 99px;
+    justify-content: space-between;
+    align-items: center;
+    border: none;
+    height: 100%;
+    cursor: pointer;
+}
+
+.dropdown-menu-btn:hover {
+    background-color: rgb(3, 120, 223);
+}
+
+#weather-time{
+    width: 20px;
+    height: 20px;
+}
+
+.container {
+    background-color: aqua;
+    width: 100%;
+    height: 100px;
+    display: flex;
+}
+
+.left-side {
+    background-color: bisque;
+    width: 50%;
+    height: 100%;
+}
+
+.right-side {
+    background-color: blueviolet;
+    width: 50%;
+    height: 100%;
+}
+
+.duration {
+    background-color: brown;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
