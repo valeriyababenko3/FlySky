@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-
+import React, { useState, useEffect } from 'react';
+import '../../styles/register.css';
 
 function Register() {
   const [fullname, setFullname] = useState('');
@@ -7,6 +7,20 @@ function Register() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [flashMessages, setFlashMessages] = useState([]);
+
+  useEffect(() => {
+    // Fetch flash messages from the backend during component initialization
+    fetch('http://localhost:5000/get-flash-messages')
+      .then((response) => response.json())
+      .then((data) => {
+        // Handle flash messages here, e.g., update state or display them
+        const flashMessages = data.flashMessages;
+        setFlashMessages(flashMessages);
+      })
+      .catch((error) => {
+        console.error('Error fetching flash messages:', error);
+      });
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,12 +35,12 @@ function Register() {
 
     try {
       // Send a POST request to your backend for registration
-      const response = await fetch('/register', {
+      const response = await fetch('http://localhost:5000/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(data), // Convert data to JSON
       });
 
       const responseData = await response.json();
@@ -34,9 +48,11 @@ function Register() {
       if (response.ok) {
         // Registration successful, display a success message
         setFlashMessages([{ type: 'success', message: responseData.message }]);
+        // Redirect to the login page
+        window.location.href = '/login';
       } else {
         // Registration failed, display an error message
-        setFlashMessages([{ type: 'error', message: responseData.message }]);
+        setFlashMessages([{ type: 'error', message: responseData.error }]);
       }
     } catch (error) {
       console.error('Error:', error);
@@ -50,7 +66,7 @@ function Register() {
           <div className="main-login main-center">
             <h5>Register New User or Log In to an Existing Account</h5>
             <form
-              action="/register" // Replace with the appropriate route
+              action="http://localhost:5000/register"
               method="post"
               autoComplete="off"
               onSubmit={handleSubmit}
@@ -141,18 +157,16 @@ function Register() {
                 </div>
               </div>
 
-              <div className="form-group">
-                {/* Flash messages */}
-                {flashMessages.map((message, index) => (
-                  <div
-                    key={index}
-                    className={`alert alert-${message.type}`}
-                    role="alert"
-                  >
-                    {message.message}
-                  </div>
-                ))}
-              </div>
+              {/* Flash messages */}
+              {flashMessages.map((message, index) => (
+                <div
+                  key={index}
+                  className={`alert alert-${message.type}`}
+                  role="alert"
+                >
+                  {message.message}
+                </div>
+              ))}
 
               <input
                 type="submit"
@@ -160,9 +174,7 @@ function Register() {
                 className="form-control btn btn-primary"
               />
               <p style={{ padding: '5px' }}>
-                <a href="/login" className="btn btn-dark">
-                  Login
-                </a>
+                Already have an account? <a href="/login">Login</a>
               </p>
             </form>
           </div>
