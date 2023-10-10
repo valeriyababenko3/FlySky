@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Routes, Redirect } from "react-router-dom";
-import FlightData from './components/FlightPage/flightPage';
+import FlightData from './components/FlightPage';
 import Login from "./components/Login/login";
 import Register from "./components/Register/register";
 import NavBar from "./components/NavBar";
