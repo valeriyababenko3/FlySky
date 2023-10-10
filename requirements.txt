@@ -6,5 +6,6 @@ pip3 install python-decouple
 pip3 install flask_cors
 pip3 install python-dotenv
 pip3 install requests
+pip install Flask-Migrate
 
 

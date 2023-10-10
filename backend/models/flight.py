@@ -62,7 +62,7 @@ class Flight:
             flights = []
             for flight_data in flights_data:
                 flight = cls(
-                id=flight_data['flight_id'], 
+                id=flight_data['id'], 
                 departure=flight_data['departure'],
                 arrival=flight_data['arrival'],
                 airline_name=flight_data['airline_name'],

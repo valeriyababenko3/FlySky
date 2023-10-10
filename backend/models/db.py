@@ -30,5 +30,7 @@ class Database():
     def commit(self):
         self.__conn__.commit()
         
-    def close():
-        ""
+    def close(self):
+        self.__cursor__.close()
+        self.__conn__.close()
+

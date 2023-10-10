@@ -100,7 +100,7 @@ def save_flight_data():
     flight_status = flight_data['flight_status']
     
     flight = Flight(None, departure, arrival, airline_name, flight_name, flight_status)
-    success = flight.save(flight)
+    success = flight.save_flight_data(flight)
     
     if success:
         return jsonify({"message": "Flight data saved successfully"})
