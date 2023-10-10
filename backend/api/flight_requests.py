@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 from flask_login import login_required
 from models.flight import Flight
 from models.user_flight import UserFlight
+import os
+import requests
 
 flight_requests = Blueprint('flights', __name__)
 
@@ -67,45 +69,89 @@ flight_data = {
                 "is_ground": False
             }
         }
-# def get_flight_data():
-#     if request.method == 'GET':
-#         api_key = os.getenv("API_KEY")
-#         api_url = f"http://api.aviationstack.com/v1/flights?access_key={api_key}"
+
+@flight_requests.route('/fetch_api')
+def get_flight_data():
+    if request.method == 'GET':
+        api_key = os.getenv("API_KEY")
+        api_url = f"https://airlabs.co/api/v9/flights?api_key={api_key}"
         
-#         response = requests.get(api_url)
+        response = requests.get(api_url)
 
-#         if response.status_code == 200:
-#             print("status was okay")
-#             data = response.json()
-#             save_flight_data(data["data"])
-#             return jsonify(data["data"])
-#         else:
-#             print(f'{response.status_code}')
-#             print(response.text)
-#             return jsonify({"error": "Fail"})
+        if response.status_code == 200:
+            print("status was okay")
+            data = response.json().get("response")
+        else:
+            print(f'{response.status_code}')
+            print(response.text)
+            return jsonify({"error": "Fail"})
+    
+        flights_data = []
+        
+        for item in data[:50]:  
+            airline_name = item.get('airline_iata')  
+            flight_name = item.get('flight_iata')  
+            flight_status = item.get('status')
+            
+            flight_data = {
+                'airline_name': airline_name,
+                'flight_name': flight_name,
+                'flight_status': flight_status
+            }
+            
+            flight_iata = item.get('flight_iata')
+            api_url_2 = f"https://airlabs.co/api/v9/flight?flight_iata={flight_iata}&api_key={api_key}"
+           
+            response2 = requests.get(api_url_2)
+            
+            if response2.status_code == 200:
+                print("Status was okay")
+                data2 = response2.json().get("response")
+                if data2:
+                    departure = data2.get('dep_time')
+                    arrival = data2.get('arr_time')
+                    flight_data['departure'] = departure
+                    flight_data['arrival'] = arrival
+            else:
+                print(f'Status code: {response2.status_code}')
+                print(response2.text)
+                return jsonify({"error": "Fail"})
+            
+            flights_data.append(flight_data)
+        
+        save_flight_data(flights_data)
+        return jsonify({"flights": flights_data})
 
+    return jsonify({"error": "Invalid HTTP method"})
 #save the flight data from the third party api to the database
 @flight_requests.route('/api_data', methods=['GET'])
-def save_flight_data():
-    # for item in flight_data:
-    #     departure = item.get('departure').get('actual')
-    #     arrival = item.get('arrival').get('actual')
-    #     airline_name = item.get('airline').get('name')
-    #     flight_name = item.get('flight').get('number')
-    #     flight_status = item.get('flight_status')
-    departure = flight_data['departure']['actual']
-    arrival = flight_data['arrival']['actual']
-    airline_name = flight_data['airline']['name']
-    flight_name = flight_data['flight']['number']
-    flight_status = flight_data['flight_status']
+def save_flight_data(flights_data):
+    print(flight_data)
+    errors = []
+    for item in flights_data:
+        departure = item.get('departure')  
+        arrival = item.get('arrival')   
+        airline_name = item.get('airline_name')  
+        flight_name = item.get('flight_name')  
+        flight_status = item.get('flight_status') 
+        
+    # departure = flight_data['departure']['actual']
+    # arrival = flight_data['arrival']['actual']
+    # airline_name = flight_data['airline']['name']
+    # flight_name = flight_data['flight']['number']
+    # flight_status = flight_data['flight_status']
     
-    flight = Flight(None, departure, arrival, airline_name, flight_name, flight_status)
-    success = flight.save_flight_data(flight)
+        flight = Flight(None, departure, arrival, airline_name, flight_name, flight_status)
+        print(flight)
+        success = flight.save_flight_data(flight)
     
-    if success:
-        return jsonify({"message": "Flight data saved successfully"})
+        if not success:
+            errors.append("Failed to save flight data")
+
+    if errors:
+        return jsonify({"errors": errors}, 500)
     else:
-        return jsonify({"error": "Failed to save flight data"})
+        return jsonify({"message": "All flight data saved successfully"})
     
 #Get a flights details using the flightid
 @flight_requests.route('/<int:flight_id>', methods=['GET'])

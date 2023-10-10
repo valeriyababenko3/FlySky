@@ -13,6 +13,9 @@ class Flight:
         
     def save_flight_data(self, flight):
         try:
+            print(flight.departure)
+            print(flight.arrival)
+            print(flight.airline_name)
             sql_query = """
                 INSERT INTO flights (departure, arrival, airline_name, flight_name, flight_status) 
                 VALUES (%s, %s, %s, %s, %s)
@@ -21,6 +24,7 @@ class Flight:
             
             db.execute(sql_query, params)
             db.commit()
+            print("success saving flight to database")
             # cursor.close() not sure if I need this
             return True  
         except Exception as e:
