@@ -1,4 +1,4 @@
-import '../../styles/navbar.css'
+import '../../Styles/navbar.css'
 import React, { useEffect, useState } from 'react'
 
 function FlightData() {

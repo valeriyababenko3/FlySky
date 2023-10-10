@@ -1,4 +1,4 @@
-import '../../styles/navbar.css'
+import '../../Styles/navbar.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlane, faUser } from '@fortawesome/free-solid-svg-icons'
 import { useEffect } from 'react'
