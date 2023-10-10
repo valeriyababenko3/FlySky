@@ -1,18 +1,8 @@
 from flask import jsonify, Blueprint, request
 from dotenv import load_dotenv
-import os
-import requests
-import psycopg2 
-from psycopg2 import extras
-from decouple import config
-
-DB_HOST = config('DB_HOST')
-DB_NAME = config('DB_NAME')
-DB_USER = config('DB_USER')
-DB_PASS = config('DB_PASS')
-
-conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER,
-                        password=DB_PASS, host=DB_HOST)
+from flask_login import login_required
+from models.flight import Flight
+from models.user_flight import UserFlight
 
 flight_requests = Blueprint('flights', __name__)
 
@@ -109,52 +99,104 @@ def save_flight_data():
     flight_name = flight_data['flight']['number']
     flight_status = flight_data['flight_status']
     
-    try:
-        cursor = conn.cursor(cursor_factory=extras.DictCursor)
-
-        cursor.execute(
-            "INSERT INTO flights (departure, arrival, airline_name, flight_name, flight_status) VALUES (%s, %s, %s, %s, %s)",
-            (departure, arrival, airline_name, flight_name, flight_status)
-        )
-
-        conn.commit()
-        cursor.close()
-        print("It wAS A SUCCESS")
-        return 'success'
-    except Exception as e:
-        print(f"Error saving flight data: {e}")
-    return 'non success'
+    flight = Flight(None, departure, arrival, airline_name, flight_name, flight_status)
+    success = flight.save(flight)
     
+    if success:
+        return jsonify({"message": "Flight data saved successfully"})
+    else:
+        return jsonify({"error": "Failed to save flight data"})
+    
+#Get a flights details using the flightid
+@flight_requests.route('/<int:flight_id>', methods=['GET'])
+def get_flight_details(flight_id):
+    try:
+        flight = Flight.find_flight(flight_id)
+
+        if flight:
+            return jsonify(flight.serialize()), 200
+        else:
+            return jsonify({"message": "Flight not found"}), 404
+    except Exception as e:
+        print(f"Error fetching flight details: {e}")
+        return jsonify({"error": "Failed to retrieve flight details"}), 500
+    
+#create a users flight
+@flight_requests.route('/user_flights', methods=['POST'])
+def create_user_flight():
+    data = request.get_json()
+
+    if data:
+        user_id = data.get('user_id')
+        flight_id = data.get('flight_id')
+
+        if UserFlight.flight_exists(user_id, flight_id):
+            return jsonify({"error": "User flight already exists"}), 400
+
+        user_flight = UserFlight(user_id, flight_id)
+        success = user_flight.save_user_flight()
+
+        if success:
+            return jsonify({"message": "User flight created successfully"}), 201
+        else:
+            return jsonify({"error": "Failed to create user flight"}), 500
+    else:
+        return jsonify({"error": "Invalid data format"}), 400
+    
+# Get all flights for a user
+@login_required
+@flight_requests.route('/user_flights/<int:user_id>', methods=['GET'])
+def get_all_user_flights(user_id):
+    try:
+        user_flights = UserFlight.get_user_flights(user_id)
+
+        if user_flights:
+            return jsonify({"user_flights": user_flights}), 200
+        else:
+            return jsonify({"message": "No user flights found for this user"}), 404
+    except Exception as e:
+        print(f"Error fetching user flights: {e}")
+        return jsonify({"error": "Failed to retrieve user flights"}), 500
+    
+#get a user flight
+@login_required
+@flight_requests.route('/user_flights/<int:user_id>/<int:flight_id>', methods=['GET'])
+def get_user_flight_details(user_id, flight_id):
+    try:
+        user_flight = UserFlight.get_user_flight(user_id, flight_id)
+
+        if user_flight:
+            return jsonify({"user_flight": user_flight}), 200
+        else:
+            return jsonify({"message": "No matching user flight found"}), 404
+    except Exception as e:
+        print(f"Error fetching user flight details: {e}")
+        return jsonify({"error": "Failed to retrieve user flight details"}), 500  
+      
 #Get all the flight data from db
 @flight_requests.route('/', methods=['GET'])
 def get_saved_flight_data():
-    try: 
-        cursor = conn.cursor(cursor_factory=extras.DictCursor)
-        query = 'SELECT * FROM flights'
-        cursor.execute(query)
-        flight_data = cursor.fetchall()
-        cursor.close()
-        return jsonify({'flight_data': flight_data})
+    try:
+        flights = Flight.get_flights()
+        
+        if flights:
+            return jsonify({"flights": [flight.serialize() for flight in flights]}), 200
+        else:
+            return jsonify({"message": "No user flights found for this user"}), 404
     except Exception as e:
-        print(f"Error fetching flight data from the database: {e}")
-        return jsonify({"error": "Failed to retrieve data from the database"})
-    
-#Get one flight data from db
-@flight_requests.route('/<int:flight_id>', methods=['GET'])
-def get_flight(flight_id):
-    flight = ""
+        print(f"Error fetching flights: {e}")
+        return jsonify({"error": "Failed to retrieve flights"}), 500
 
 #delete one flight from db
-@flight_requests.route('<int:flight_id>', methods=['DELETE'])  
+@flight_requests.route('/<int:flight_id>', methods=['DELETE'])
 def delete_flight(flight_id):
     try:
-        cursor = conn.cursor()
-        query = 'DELETE FROM flights WHERE flight_id = %s'
-        cursor.execute(query, (flight_id,))
-        commit = conn.commit()
-        print(commit)
-        cursor.close()
-        return jsonify({"flight deleted": f"flight with ID {flight_id} was deleted successfully"})
+        success = Flight.delete_flight(flight_id)
+
+        if success:
+            return jsonify({"flight_deleted": f"Flight with ID {flight_id} was deleted successfully"}), 200
+        else:
+            return jsonify({"error": "Failed to delete flight data"}), 500
     except Exception as e:
         print(f"Error deleting flight data: {e}")
-        return jsonify({"error": "Failed to delete flight data"})
+        return jsonify({"error": "Failed to delete flight data"}), 500
