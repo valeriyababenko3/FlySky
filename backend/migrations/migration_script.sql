@@ -19,11 +19,11 @@ CREATE TABLE IF NOT EXISTS users (
 -- Create the flights table
 CREATE TABLE IF NOT EXISTS flights (
     id SERIAL PRIMARY KEY,
-    departure TIMESTAMP NOT NULL,
-    arrival TIMESTAMP NOT NULL,
-    airline_name VARCHAR(255) NOT NULL,
-    flight_name VARCHAR(255) NOT NULL,
-    flight_status VARCHAR(255) NOT NULL
+    departure TIMESTAMP,
+    arrival TIMESTAMP,
+    airline_name VARCHAR(255),
+    flight_name VARCHAR(255),
+    flight_status VARCHAR(255)
 );
 
 -- Create the user_flights table (join table)
