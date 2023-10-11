@@ -23,7 +23,9 @@ CREATE TABLE IF NOT EXISTS flights (
     arrival TIMESTAMP,
     airline_name VARCHAR(255),
     flight_name VARCHAR(255),
-    flight_status VARCHAR(255)
+    flight_status VARCHAR(255), 
+    departure_city VARCHAR(255), 
+    arrival_city VARCHAR(255)   
 );
 
 -- Create the user_flights table (join table)

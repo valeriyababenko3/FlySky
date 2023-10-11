@@ -74,47 +74,48 @@ flight_data = {
 def get_flight_data():
     if request.method == 'GET':
         api_key = os.getenv("API_KEY")
-        api_url = f"https://airlabs.co/api/v9/flights?api_key={api_key}"
+        live_flight_api_url = f"https://airlabs.co/api/v9/flights?api_key={api_key}"
         
-        response = requests.get(api_url)
+        live_flight_response = requests.get(live_flight_api_url)
 
-        if response.status_code == 200:
+        if live_flight_response.status_code == 200:
             print("status was okay")
-            data = response.json().get("response")
+            data = live_flight_response.json().get("response")
         else:
-            print(f'{response.status_code}')
-            print(response.text)
+            print(f'{live_flight_response.status_code}')
+            print(live_flight_response.text)
             return jsonify({"error": "Fail"})
     
         flights_data = []
         
-        for item in data[:50]:  
+        for item in data[:2]:  
             airline_name = item.get('airline_iata')  
             flight_name = item.get('flight_iata')  
             flight_status = item.get('status')
+            duration = item.get('duration')
             
             flight_data = {
                 'airline_name': airline_name,
                 'flight_name': flight_name,
-                'flight_status': flight_status
+                'flight_status': flight_status,
+                'duration': duration
             }
             
             flight_iata = item.get('flight_iata')
-            api_url_2 = f"https://airlabs.co/api/v9/flight?flight_iata={flight_iata}&api_key={api_key}"
-           
-            response2 = requests.get(api_url_2)
+            flight_api_url = f"https://airlabs.co/api/v9/flight?flight_iata={flight_iata}&api_key={api_key}"
+            flight_response = requests.get(flight_api_url)
             
-            if response2.status_code == 200:
-                print("Status was okay")
-                data2 = response2.json().get("response")
+            if flight_response.status_code == 200:
+                print("Flight Response was okay")
+                data2 = flight_response.json().get("response")
                 if data2:
                     departure = data2.get('dep_time')
                     arrival = data2.get('arr_time')
                     flight_data['departure'] = departure
                     flight_data['arrival'] = arrival
             else:
-                print(f'Status code: {response2.status_code}')
-                print(response2.text)
+                print(f'Status code: {flight_response.status_code}')
+                print(flight_response.text)
                 return jsonify({"error": "Fail"})
             
             flights_data.append(flight_data)
@@ -134,6 +135,9 @@ def save_flight_data(flights_data):
         airline_name = item.get('airline_name')  
         flight_name = item.get('flight_name')  
         flight_status = item.get('flight_status') 
+    
+        departure_city = 'New York'
+        arrival_city = 'Cancun'
         
     # departure = flight_data['departure']['actual']
     # arrival = flight_data['arrival']['actual']
@@ -141,7 +145,7 @@ def save_flight_data(flights_data):
     # flight_name = flight_data['flight']['number']
     # flight_status = flight_data['flight_status']
     
-        flight = Flight(None, departure, arrival, airline_name, flight_name, flight_status)
+        flight = Flight(None, departure, arrival, airline_name, flight_name, flight_status, departure_city, arrival_city)
         print(flight)
         success = flight.save_flight_data(flight)
     

@@ -3,24 +3,23 @@ from models.db import Database
 db = Database()
 
 class Flight:
-    def __init__(self, id, departure, arrival, airline_name, flight_name, flight_status):
+    def __init__(self, id, departure, arrival, airline_name, flight_name, flight_status, departure_city, arrival_city):
         self.id = id
         self.departure = departure
         self.arrival = arrival
         self.airline_name = airline_name
         self.flight_name = flight_name
         self.flight_status = flight_status
+        self.departure_city = departure_city
+        self.arrival_city = arrival_city
         
     def save_flight_data(self, flight):
         try:
-            print(flight.departure)
-            print(flight.arrival)
-            print(flight.airline_name)
             sql_query = """
-                INSERT INTO flights (departure, arrival, airline_name, flight_name, flight_status) 
-                VALUES (%s, %s, %s, %s, %s)
+                INSERT INTO flights (departure, arrival, airline_name, flight_name, flight_status, departure_city, arrival_city) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
             """
-            params = (flight.departure, flight.arrival, flight.airline_name, flight.flight_name, flight.flight_status)
+            params = (flight.departure, flight.arrival, flight.airline_name, flight.flight_name, flight.flight_status, flight.departure_city, flight.arrival_city)
             
             db.execute(sql_query, params)
             db.commit()
