@@ -7,6 +7,7 @@ from flask_login import login_required
 
 user_requests = Blueprint('users', __name__)
 
+#a user shouldnt be able to login if they are already logged in
 @user_requests.route('/login', methods=['POST'])
 @cross_origin()
 def login():
@@ -68,6 +69,7 @@ def register():
     else:
         return jsonify({"error": "Invalid data format"})
 
+#a user should only be able to logout when logged in
 @user_requests.route('/logout')
 @cross_origin() 
 @login_required
