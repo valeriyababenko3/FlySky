@@ -13,7 +13,7 @@ function FlightData() {
           throw new Error(`HTTP error! Status: ${flightResponse.status}`);
         }
         const flightData = await flightResponse.json();
-        setFlightData(flightData);
+        setFlightData(Object.values(flightData)[0]);
       } catch (error) {
         console.error('Error fetching data:', error);
         setError('An error occurred while fetching data.');
@@ -24,41 +24,45 @@ function FlightData() {
   }, []);
 
   console.log(flightData);
+  const getDate = (dateString) => {
+    const date = new Date(dateString)
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+
+    const period = hours >= 12 ? "PM" : "AM";
+    const hours12 = hours % 12 || 12;
+
+    const formattedTime = `${hours12}:${minutes}${period}`;
+    return formattedTime
+  }
     
-      return (
-        <div className='container'>
+  return (
+    <div className='container'>
+      {flightData.map((flight, index) => (
+        <div className='flight' key={index}>
           <div className='left-side'>
             <div className='top-side'>
-              <div className='times'> 
-
+              <div className='times'>
               </div>
               <div className='duration'>
                 <div className='deptime'>
-                  <p>7:30am</p>
-                </div>
-                <div className='arrtime'>
-                  <p>7:30pm</p>
+                  <p>Departure: {getDate(flight.departure)}</p>
+                  <p>Arrival: {getDate(flight.arrival)}</p>
+                  <p>Duration: </p>
                 </div>
               </div>
               <div className='nonstop'>
-
+                Flight Status: {flight.flight_status}
               </div>
             </div>
             <div className='bottom'>
-
             </div>
           </div>
           <div className='right-side'>
-
           </div>
         </div>
-      );
-    }
-
-    {/* {flightData.map((flightInfo, index) => (
-            <ul key={index}>
-              {Object.values(flightInfo)}
-            </ul>
-          ))} */}
-    
+      ))}
+    </div>
+  );
+}
     export default FlightData;
