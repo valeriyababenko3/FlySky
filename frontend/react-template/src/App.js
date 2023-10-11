@@ -13,7 +13,7 @@ function App() {
         <Route exact path="/" element={<FlightData/>} />
         <Route exact path="/login" element={<Login/>} />
         <Route exact path="/register" element={<Register/>} />
-        <Route exact path="/booking" element={<Booking />} />
+        <Route exact path="/booking" element={<Booking/>} />
       </Routes>
       {/* <NavBar />
       <FlightData /> */}
