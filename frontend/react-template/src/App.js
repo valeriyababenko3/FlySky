@@ -4,6 +4,7 @@ import FlightData from './components/FlightPage';
 import Login from "./components/Login/login";
 import Register from "./components/Register/register";
 import NavBar from "./components/NavBar";
+import Booking from "./components/Booking";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route exact path="/" element={<FlightData/>} />
         <Route exact path="/login" element={<Login/>} />
         <Route exact path="/register" element={<Register/>} />
+        <Route exact path="/booking" element={<Booking/>} />
       </Routes>
       {/* <NavBar />
       <FlightData /> */}

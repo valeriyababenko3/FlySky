@@ -153,6 +153,7 @@ def save_flight_data(flights_data):
     else:
         return jsonify({"message": "All flight data saved successfully"})
     
+#Everyone can have access to this but only users logged in can book it
 #Get a flights details using the flightid
 @flight_requests.route('/<int:flight_id>', methods=['GET'])
 def get_flight_details(flight_id):
@@ -167,6 +168,7 @@ def get_flight_details(flight_id):
         print(f"Error fetching flight details: {e}")
         return jsonify({"error": "Failed to retrieve flight details"}), 500
     
+#only the current user logged in can book a flight
 #create a users flight
 @flight_requests.route('/user_flights', methods=['POST'])
 def create_user_flight():
@@ -189,6 +191,7 @@ def create_user_flight():
     else:
         return jsonify({"error": "Invalid data format"}), 400
     
+#only the current user can see thier flights
 # Get all flights for a user
 @login_required
 @flight_requests.route('/user_flights/<int:user_id>', methods=['GET'])
@@ -204,6 +207,7 @@ def get_all_user_flights(user_id):
         print(f"Error fetching user flights: {e}")
         return jsonify({"error": "Failed to retrieve user flights"}), 500
     
+#only a user can see their flight
 #get a user flight
 @login_required
 @flight_requests.route('/user_flights/<int:user_id>/<int:flight_id>', methods=['GET'])
@@ -218,7 +222,8 @@ def get_user_flight_details(user_id, flight_id):
     except Exception as e:
         print(f"Error fetching user flight details: {e}")
         return jsonify({"error": "Failed to retrieve user flight details"}), 500  
-      
+ 
+#everyone has access to this      
 #Get all the flight data from db
 @flight_requests.route('/', methods=['GET'])
 def get_saved_flight_data():
@@ -232,6 +237,7 @@ def get_saved_flight_data():
     except Exception as e:
         print(f"Error fetching flights: {e}")
         return jsonify({"error": "Failed to retrieve flights"}), 500
+
 
 #delete one flight from db
 @flight_requests.route('/<int:flight_id>', methods=['DELETE'])
