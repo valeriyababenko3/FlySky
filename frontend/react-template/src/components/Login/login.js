@@ -10,6 +10,12 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (sessionStorage.getItem('loggedin')) {
+      // User is already logged in, redirect to the home page
+      window.location.href = '/';
+      return;
+    }
+
     try {
       const response = await fetch('http://localhost:5000/api/users/login', {
         method: 'POST',
@@ -84,12 +90,16 @@ function Login() {
               className="form-control btn btn-success"
             />
           </form>
-          {/* Render flash messages */}
-          {flashMessages.map((message, index) => (
-            <div key={index} className={`alert alert-${message.type}`}>
-              {message.message}
-            </div>
-          ))}
+              {/* Flash messages */}
+              {flashMessages.map((message, index) => (
+                <div
+                  key={index}
+                  className={`alert alert-${message.type}`}
+                  role="alert"
+                >
+                  {message.message}
+                </div>
+              ))}
           <p>
             No account <a href="/register" className="btn btn-dark">Register</a>
           </p>

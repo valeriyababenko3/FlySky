@@ -1,10 +1,19 @@
-import '../../Styles/navbar.css'
+import '../../styles/navbar.css'
 import React, { useEffect, useState } from 'react'
 import FlightCard from '../FlightCard';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 function FlightData() {
   const [flightData, setFlightData] = useState([]);
   const [error, setError] = useState(null);
+  const [searchDeparture, setSearchDeparture] = useState('');
+  const [searchArrival, setSearchArrival] = useState('');
+  const [departureDate, setDepartureDate] = useState(null);
+  const [arrivalDate, setArrivalDate] = useState(null);
+  const [filters, setFilters] = useState({
+    airline: '',
+  });
 
   useEffect(() => {
     const fetchData = async () => {
