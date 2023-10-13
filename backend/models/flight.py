@@ -36,7 +36,20 @@ class Flight:
             # cursor.close() not sure if I need this
             return True
         except Exception as e:
-            print(f"Error saving flight: {e}")
+            print(f"Error saving flight: {e}")            
+#     @classmethod
+#     def delete_flight(cls, flight_id, user_id):
+#         try:
+#             sql_query = "DELETE FROM user_flights WHERE flight_id = %s AND user_id = %s"
+#             params = (flight_id, user_id)
+
+#             db.execute(sql_query, params)
+#             db.commit()
+
+#             return True
+#         except Exception as e:
+#             print(f"Error deleting flight data: {e}")
+#             return False
 
     @classmethod
     def delete_flight(cls, flight_id):

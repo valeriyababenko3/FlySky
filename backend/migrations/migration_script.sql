@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS flights (
 -- Create the user_flights table (join table)
 CREATE TABLE IF NOT EXISTS user_flights (
     id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users(id),
-    flight_id INT REFERENCES flights(id),
+    user_id INT NOT NULL REFERENCES users(id),
+    flight_id INT NOT NULL REFERENCES flights(id),
     CONSTRAINT unique_user_flight UNIQUE (user_id, flight_id)
 );

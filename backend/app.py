@@ -9,12 +9,10 @@ import psycopg2.extras
 from models.db import Database
 from flask_login import LoginManager
 
-
 db = Database()
 
 # Access the connection
 conn = db.__conn__
-
 app = Flask(__name__)
 login_manager = LoginManager(app)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
@@ -23,17 +21,13 @@ login_manager.login_view = "login"
 app.register_blueprint(flight_requests, url_prefix='/api/flights')
 app.register_blueprint(weather_requests)
 app.register_blueprint(user_requests, url_prefix='/api/users')
-
+    
 app.secret_key = config('app.secret_key')
-
 
 @app.route('/')
 def home():
-    # Check if the user is logged in
     if 'loggedin' in session:
-        # User is logged in, show them the home page
         return render_template('home.html', username=session['username'])
-    # User is not logged in, redirect to the login page
     return redirect(url_for('login'))
 
 # @app.route('/profile')

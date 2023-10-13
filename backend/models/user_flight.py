@@ -1,4 +1,5 @@
 from models.db import Database
+from models.flight import Flight
 
 db = Database()
 
@@ -10,25 +11,47 @@ class UserFlight:
     @classmethod
     def get_user_flights(cls, user_id):
         try:
-            sql_query = "SELECT * FROM user_flights WHERE user_id = %s"
+            sql_query = """
+            SELECT *
+            FROM user_flights AS uf
+            JOIN flights AS f ON uf.flight_id = f.id
+            WHERE uf.user_id = %s
+            """
             params = (user_id,)
 
             db.execute(sql_query, params)
-            user_flights_data = db.fetch_results()
+            user_flights_data = db.fetch_results(True)
 
             user_flights = []
             for flight_data in user_flights_data:
-                user_flight = UserFlight(
-                    flight_data['user_id'],
+                user_flight = cls(
+                    user_id,
                     flight_data['flight_id']
                 )
-                user_flights.append(user_flight)
+                flight_details = Flight.find_flight(user_flight.flight_id)
+                user_flight.departure = flight_details.departure
+                user_flight.arrival = flight_details.arrival
+                user_flight.airline_name = flight_details.airline_name
+                user_flight.flight_name = flight_details.flight_name
+                user_flight.flight_status = flight_details.flight_status
+
+                user_flight_dict = {
+                    "user_id": user_flight.user_id,
+                    "flight_id": user_flight.flight_id,
+                    "departure": user_flight.departure,
+                    "arrival": user_flight.arrival,
+                    "airline_name": user_flight.airline_name,
+                    "flight_name": user_flight.flight_name,
+                    "flight_status": user_flight.flight_status,
+                }
+
+                user_flights.append(user_flight_dict)
 
             return user_flights
         except Exception as e:
             print(f"Error fetching user flights: {e}")
             return []
-
+        
     def save_user_flight(self):
         try:
             sql_query = """
@@ -65,6 +88,8 @@ class UserFlight:
         
     @classmethod
     def flight_exists(cls, user_id, flight_id):
+        print(user_id)
+        print(flight_id)
         try:
             sql_query = "SELECT * FROM user_flights WHERE user_id = %s AND flight_id = %s"
             params = (user_id, flight_id)
