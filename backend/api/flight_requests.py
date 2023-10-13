@@ -88,7 +88,7 @@ def get_flight_data():
     
         flights_data = []
         
-        for item in data[:15]:  
+        for item in data[:5]:  
             airline_name = item.get('airline_iata')  
             flight_name = item.get('flight_iata')  
             flight_status = item.get('status')
@@ -96,7 +96,9 @@ def get_flight_data():
             flight_data = {
                 'airline_name': airline_name,
                 'flight_name': flight_name,
-                'flight_status': flight_status
+                'flight_status': flight_status,
+                'departure_airport': 'New York',
+                'arrival_airport': 'Cancun'
             }
             
             flight_iata = item.get('flight_iata')
@@ -126,6 +128,7 @@ def get_flight_data():
 #save the flight data from the third party api to the database
 @flight_requests.route('/api_data', methods=['GET'])
 def save_flight_data(flights_data):
+    print(flights_data)
     errors = []
     for item in flights_data:
         departure = item.get('departure')  
@@ -133,6 +136,8 @@ def save_flight_data(flights_data):
         airline_name = item.get('airline_name')  
         flight_name = item.get('flight_name')  
         flight_status = item.get('flight_status') 
+        departure_airport = item.get('departure_airport')
+        arrival_airport = item.get('arrival_airport')
     
         if not departure:
             item['departure'] = 'NA'
@@ -145,7 +150,8 @@ def save_flight_data(flights_data):
         if not flight_status:
             item['flight_status'] = 'NA'
             
-        flight = Flight(None, departure, arrival, airline_name, flight_name, flight_status)
+        flight = Flight(None, departure, arrival, airline_name, flight_name, flight_status, departure_airport, arrival_airport)
+        print('here')
         print(flight)
         success = flight.save_flight_data(flight)
     

@@ -67,11 +67,11 @@ def search_flights():
     query_params = (f"%{search_departure}%", f"%{search_arrival}%")
 
     if departure_date:
-        query += " AND departure_date = %s"
+        query += " AND departure= %s"
         query_params += (departure_date,)
 
     if arrival_date:
-        query += " AND arrival_date = %s"
+        query += " AND arrival = %s"
         query_params += (arrival_date,)
 
     cursor.execute(query, query_params)

@@ -10,22 +10,24 @@ conn = db.__conn__
 
 
 class Flight:
-    def __init__(self, id, departure, arrival, airline_name, flight_name, flight_status):
+    def __init__(self, id, departure, arrival, airline_name, flight_name, flight_status, departure_airport, arrival_airport):
         self.id = id
         self.departure = departure
         self.arrival = arrival
         self.airline_name = airline_name
         self.flight_name = flight_name
         self.flight_status = flight_status
+        self.departure_airport = departure_airport
+        self.arrival_airport = arrival_airport
 
     def save_flight_data(self, flight):
         try:
             sql_query = """
-                INSERT INTO flights (departure, arrival, airline_name, flight_name, flight_status) 
-                VALUES (%s, %s, %s, %s, %s)
+                INSERT INTO flights (departure, arrival, airline_name, flight_name, flight_status, departure_airport, arrival_airport) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
             """
             params = (flight.departure, flight.arrival, flight.airline_name,
-                      flight.flight_name, flight.flight_status)
+                      flight.flight_name, flight.flight_status, flight.departure_airport, flight.arrival_airport)
 
             db.execute(sql_query, params)
             db.commit()
@@ -69,7 +71,9 @@ class Flight:
             "arrival": self.arrival,
             "airline_name": self.airline_name,
             "flight_name": self.flight_name,
-            "flight_status": self.flight_status
+            "flight_status": self.flight_status,
+            "departure_airport" : self.departure_airport,
+            "arrival_airport": self.arrival_airport
         }
 
     @classmethod
@@ -88,7 +92,9 @@ class Flight:
                     arrival=flight_data['arrival'],
                     airline_name=flight_data['airline_name'],
                     flight_name=flight_data['flight_name'],
-                    flight_status=flight_data['flight_status']
+                    flight_status=flight_data['flight_status'],
+                    departure_airport=flight_data['departure_airport'],
+                    arrival_airport=flight_data['arrival_airport']
                 )
                 flights.append(flight)
 
@@ -107,8 +113,8 @@ class Flight:
             flight_data = db.fetch_results()
 
             if flight_data:
-                id, departure, arrival, airline_name, flight_name, flight_status = flight_data
-                return cls(id, departure, arrival, airline_name, flight_name, flight_status)
+                id, departure, arrival, airline_name, flight_name, flight_status, departure_airport, arrival_airport = flight_data
+                return cls(id, departure, arrival, airline_name, flight_name, flight_status, departure_airport, arrival_airport)
             else:
                 return None
         except Exception as e:
