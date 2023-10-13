@@ -91,14 +91,32 @@ def register():
     else:
         return jsonify({"error": "Invalid data format"})
 
+@user_requests.route('/get_user_name', methods=['GET'])
+def get_user_name():
+    user_id = request.args.get('userId')
+
+    if user_id:
+        user = User.find_user_by_id(user_id)
+
+        if user:
+            return jsonify({"name": user.fullname})
+        else:
+            return jsonify({"message": "User not found"}, 404)
+    else:
+        return jsonify({"message": "Missing userId parameter"}, 400)
+    
 #a user should only be able to logout when logged in
-@user_requests.route('/logout')
+
 @cross_origin() 
+@user_requests.route('/logout', methods=['POST'])  # Change the HTTP method to POST
 @login_required
 def logout():
     if 'loggedin' in session:
         session.pop('loggedin', None)
         session.pop('id', None)
         session.pop('username', None)
-        session.pop('sesssion_token', None)
-        return redirect(url_for('login'))
+        session.pop('session_token', None)  
+
+        return jsonify({"message": "Logged out successfully"})  # Return a response
+
+    return jsonify({"message": "Not logged in"}, 400)  # Return a response for the case when the user is not logged in

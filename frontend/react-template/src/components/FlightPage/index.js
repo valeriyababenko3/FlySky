@@ -25,7 +25,7 @@ function FlightData() {
     if (sessionToken) {
       const fetchUser = async () => {
         try {
-
+            debugger
           const userIdResponse = await fetch(`http://localhost:5000/api/users/find_user_by_session_token?session_token=${sessionToken}`);
           if (!userIdResponse.ok) {
             throw new Error(`HTTP error! Status: ${userIdResponse.status}`);
@@ -49,6 +49,7 @@ function FlightData() {
 
     const fetchData = async () => {
       try {
+        debugger
         if(location.pathname === '/'){
           const flightResponse = await fetch('http://localhost:5000/api/flights');
           if (!flightResponse.ok) {

@@ -28,6 +28,8 @@ class User():
         self.password = generate_password_hash(self.password)
         
     def save_user(self, user):
+        print("here1")
+        print(user)
         try:
             sql_query = """
                 INSERT INTO users (fullname, username, password, email)
@@ -72,6 +74,31 @@ class User():
             print(f"Error finding user by session token: {e}")
             return None
 
+    @classmethod
+    def find_user_by_id(cls, user_id):
+        try:
+            sql_query = "SELECT * FROM users WHERE id = %s"
+            params = (user_id,)
+
+            db.execute(sql_query, params)
+            user_data = db.fetch_results()
+
+            if user_data:
+                user_dict = {
+                    'id': user_data[0],
+                    'fullname': user_data[1],
+                    'username': user_data[2],
+                    'password': user_data[3],
+                    'email': user_data[4],
+                    'session_token': user_data[5]
+                }
+                return cls.from_dict(user_dict)
+            else:
+                return None
+        except Exception as e:
+            print(f"Error finding user by ID: {e}")
+            return None
+        
     @classmethod
     def check_credentials(cls, username):
         db.execute('SELECT * FROM users WHERE username = %s', (username,))

@@ -7,22 +7,24 @@ import FilteredFlights from "./components/FilteredFlightsPage";
 import Header from "./components/Header/header";
 import MainContent from "./components/HomePage/MainPage";
 import Footer from "./components/Footer/Footer";
+import { UserProvider } from "./components/UserProvide";
+ // Import the UserProvider
 
 function App() {
   return (
-    <div>
-      <Routes>
-        <Route exact path="/login" element={<Login/>} />
-        <Route exact path="/register" element={<Register/>} />
-        <Route exact path="/booking" element={<Booking/>} />
-        <Route exact path="/userflights" element={<FilteredFlights/>} />
-      </Routes> 
-      <Header />
-      <MainContent />
-      <Footer />
-      {/* <NavBar />
-      <FlightData /> */}
-    </div>
+    <UserProvider> {/* Wrap your entire application with UserProvider */}
+      <div>
+        <Header />
+        <Routes>
+          <Route exact path="/login" element={<Login/>} />
+          <Route exact path="/register" element={<Register/>} />
+          <Route exact path="/booking" element={<Booking/>} />
+          <Route exact path="/userflights" element={<FilteredFlights/>} />
+        </Routes> 
+        <MainContent />
+        <Footer />
+      </div>
+    </UserProvider>
   );
 }
 

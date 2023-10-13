@@ -3,20 +3,23 @@ import '../../styles/booking.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons"
 import { useLocation } from "react-router-dom";
+import { useState } from "react";
 
 function Booking(){
+    debugger
     const location = useLocation()
     const editIcon = <FontAwesomeIcon icon={faPenToSquare} />
     const flight = location.state.flight
     const userId = location.state.userId
+    const [flightConfimation, setFlightConfirmation] = useState('Trip Details') 
 
     return (
         <div className="booking-main">
             <div className="booking-heading">
                 <p className="booking-heading-one">My FlySky Trip</p>
-                <p className="booking-heading-two">Would You Like to Make any Changes to Your Trip?</p>
+                <p className="booking-heading-two">{flightConfimation}</p>
             </div>
-            <FlightCard flight={flight} userId={userId}/>
+            <FlightCard flight={flight} userId={userId} callback={setFlightConfirmation}/>
             <button className="flight-card-edit-btn">
                 Edit {editIcon}
             </button>

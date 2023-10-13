@@ -2,7 +2,8 @@ import { useLocation, useNavigate } from "react-router-dom"
 import "../../styles/flightcard.css"
 import React, { useState } from "react"
 
-function FlightCard({flight, userId}){
+function FlightCard({flight, userId, callback}){
+    debugger
     const getDate = (dateString) => {
         const date = new Date(dateString)
         const hours = date.getHours();
@@ -59,10 +60,10 @@ function FlightCard({flight, userId}){
                 body: JSON.stringify({userId, flightId})
             }).then((response) => {
                 if (response.status == 200) {
+                    callback('Booking Confimed!')
                     return response.json();
                 } else {
                     console.log(response.status)
-                    throw new Error('Failed to create user flight')
                 }
             })
         } else {
