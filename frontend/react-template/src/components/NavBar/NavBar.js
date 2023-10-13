@@ -42,8 +42,14 @@ const NavBar = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  // const handleLogout = async () => {
+  //     Cookies.remove('session_token');
+  // };
+
   const handleLogout = async () => {
-      Cookies.remove('session_token');
+    Cookies.remove('session_token');
+    setUserName('Sign In/ Log In');
+    setIsDropdownOpen(false); //
   };
   
   const handleProfileClick = (e) => {
@@ -51,26 +57,30 @@ const NavBar = () => {
     navigate('/userprofile'); // Navigate to the logout route
   }
 
+  const dropdownText = sessionToken ? (
+    <>
+      <a onClick={handleProfileClick}>Profile</a>
+      <a>Settings</a>
+      <a onClick={handleLogout}>Logout</a>
+    </>
+  ) : (
+    <a href="/login">Sign In/ Log In</a>
+  );
+  
   return (
     <nav>
       <ul>
         <li><a>Home</a></li>
-        {sessionToken ? (
-          <li>
-            <a onClick={toggleDropdown}>
-              Welcome, {userName}
-            </a>
-            {isDropdownOpen && (
-              <div className="dropdown-content">
-                <a onClick={handleProfileClick}>Profile</a>
-                <a>Settings</a>
-                <a onClick={handleLogout}>Logout</a> {/* Handle Logout click */}
-              </div>
-            )}
-          </li>
-        ) : (
-          <li><a href="/login">Sign In/ Log In</a></li>
-        )}
+        <li>
+          <a onClick={toggleDropdown}>
+            {sessionToken ? `Welcome, ${userName}` : 'Sign In/ Log In'}
+          </a>
+          {isDropdownOpen && (
+            <div className="dropdown-content">
+              {dropdownText}
+            </div>
+          )}
+        </li>
         <li><a href="#">Menu</a></li>
       </ul>
     </nav>

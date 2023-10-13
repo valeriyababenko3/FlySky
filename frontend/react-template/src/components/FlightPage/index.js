@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 
-function FlightData() {
+function FlightData({flights}) {
   const [flightData, setFlightData] = useState([]);
   const [error, setError] = useState(null);
   const location = useLocation();
@@ -41,52 +41,58 @@ function FlightData() {
     } else {
       console.error('Session token not found.');
     }
-
-    const fetchData = async () => {
-      try {
-        debugger
-        if(location.pathname === '/'){
-          const flightResponse = await fetch('http://localhost:5000/api/flights');
-          if (!flightResponse.ok) {
-            throw new Error(`HTTP error! Status: ${flightResponse.status}`);
+      if(flights.length === 0) {
+        
+        const fetchData = async () => {
+          try {
+            debugger
+            if(location.pathname === '/'){
+              const flightResponse = await fetch('http://localhost:5000/api/flights');
+              if (!flightResponse.ok) {
+                throw new Error(`HTTP error! Status: ${flightResponse.status}`);
+              }
+              const flightData = await flightResponse.json();
+              setFlightData(Object.values(flightData)[0]);
+            } else if (location.pathname === '/userprofile') {
+              const userFlightsResponse = await fetch(`http://localhost:5000/api/flights/user_flights/${userId}`);
+              if (!userFlightsResponse.ok) {
+                throw new Error(`HTTP error! Status: ${userFlightsResponse.status}`);
+              }
+              const userFlightData = await userFlightsResponse.json();
+              setFlightData(Object.values(userFlightData)[0]);
+            } 
+          } catch (error) {
+            console.error('Error fetching data:', error);
+            setError('An error occurred while fetching data.');
           }
-          const flightData = await flightResponse.json();
-          setFlightData(Object.values(flightData)[0]);
-        } else if (location.pathname === '/userprofile') {
-          const userFlightsResponse = await fetch(`http://localhost:5000/api/flights/user_flights/${userId}`);
-          if (!userFlightsResponse.ok) {
-            throw new Error(`HTTP error! Status: ${userFlightsResponse.status}`);
-          }
-          const userFlightData = await userFlightsResponse.json();
-          setFlightData(Object.values(userFlightData)[0]);
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setError('An error occurred while fetching data.');
+        };
+        fetchData()
+      } else {
+        console.log("in the else")
+        setFlightData(flights)
       }
-    };
 
-    fetchData();
+    // fetchData();
   }, [sessionToken, location.pathname, userId]);
 
-  const handleSearch = async () => {
-    try {
-      const departureDateString = departureDate ? departureDate.toISOString().split('T')[0] : '';
-      const arrivalDateString = arrivalDate ? arrivalDate.toISOString().split('T')[0] : '';
-      const searchResponse = await fetch(
-        `http://localhost:5000/search-flights?departure=${searchDeparture}&arrival=${searchArrival}&departureDate=${departureDateString}&arrivalDate=${arrivalDateString}`
-      );
+  // const handleSearch = async () => {
+  //   try {
+  //     const departureDateString = departureDate ? departureDate.toISOString().split('T')[0] : '';
+  //     const arrivalDateString = arrivalDate ? arrivalDate.toISOString().split('T')[0] : '';
+  //     const searchResponse = await fetch(
+  //       `http://localhost:5000/search-flights?departure=${searchDeparture}&arrival=${searchArrival}&departureDate=${departureDateString}&arrivalDate=${arrivalDateString}`
+  //     );
 
-      if (!searchResponse.ok) {
-        throw new Error(`HTTP error! Status: ${searchResponse.status}`);
-      }
-      const searchResult = await searchResponse.json();
-      setFlightData(searchResult.flights);
-    } catch (error) {
-      console.error('Error searching for flights:', error);
-      setError('An error occurred while searching for flights.');
-    }
-  };
+  //     if (!searchResponse.ok) {
+  //       throw new Error(`HTTP error! Status: ${searchResponse.status}`);
+  //     }
+  //     const searchResult = await searchResponse.json();
+  //     setFlightData(searchResult.flights);
+  //   } catch (error) {
+  //     console.error('Error searching for flights:', error);
+  //     setError('An error occurred while searching for flights.');
+  //   }
+  // };
   const handleClick = (e) => {
     e.preventDefault()
     navigate('/userflights')

@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import FlightOptions from './buttons';
 import FlightDateTimePicker from './FlightDatePicker';
 import "../../styles/styles.css"
 import FlightData from '../FlightPage';
 
 const MainContent = () => {
+  const [flights, setFlights] = useState([])
+
   return (
     <main>
       <div className="square-window">
@@ -14,11 +16,11 @@ const MainContent = () => {
             <p><h2>Flights</h2></p>
             <FlightOptions />
             <div className="date-pickers">  
-            <FlightDateTimePicker /> 
+            <FlightDateTimePicker setFlights={setFlights}/> 
             </div>
             </div>
             </div>
-            <FlightData />
+            <FlightData flights={flights}/>
         </div>
         
     </main>

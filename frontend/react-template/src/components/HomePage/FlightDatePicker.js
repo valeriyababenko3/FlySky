@@ -2,14 +2,17 @@ import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import "../../styles/styles.css"
+import { useNavigate } from 'react-router-dom';
+import FlightCard from '../FlightCard';
 
-const FlightDateTimePicker = ({ label }) => {
+const FlightDateTimePicker = ({ label, setFlights}) => {
   const [departureDate, setDepartureDate] = useState(null);
   const [arrivalDate, setArrivalDate] = useState(null);
   const [flightData, setFlightData] = useState([]);
   const [error, setError] = useState(null);
   const [searchDeparture, setSearchDeparture] = useState('');
   const [searchArrival, setSearchArrival] = useState('');
+  const navigate = useNavigate()
 
   const handleSearch = async () => {
     try {
@@ -23,7 +26,12 @@ const FlightDateTimePicker = ({ label }) => {
         throw new Error(`HTTP error! Status: ${searchResponse.status}`);
       }
       const searchResult = await searchResponse.json();
+      console.log("search result")
+      console.log(searchResult)
       setFlightData(searchResult.flights);
+      setFlights(flightData)
+      console.log({"flightdata": flightData})
+
     } catch (error) {
       console.error('Error searching for flights:', error);
       setError('An error occurred while searching for flights.');
@@ -71,6 +79,9 @@ const FlightDateTimePicker = ({ label }) => {
       <div className="flight-search-button">
         <button onClick={handleSearch}>Search Flights</button>
       </div>
+      {flightData.map(flight => {
+        <FlightCard flight={flight}/>
+      })}
     </div>
   );
   

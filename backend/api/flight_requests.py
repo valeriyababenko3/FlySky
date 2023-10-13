@@ -5,6 +5,7 @@ from models.flight import Flight
 from models.user_flight import UserFlight
 import os
 import requests
+import random
 
 flight_requests = Blueprint('flights', __name__)
 
@@ -88,17 +89,25 @@ def get_flight_data():
     
         flights_data = []
         
+        cities = ["New York", "Los Angeles", "Chicago", "Houston", "Miami", "San Francisco", "Cancun"]
+
         for item in data[:5]:  
             airline_name = item.get('airline_iata')  
             flight_name = item.get('flight_iata')  
             flight_status = item.get('status')
             
+            departure_city = random.choice(cities)
+            
+            arrival_cities = cities.copy()
+            arrival_cities.remove(departure_city)
+            arrival_city = random.choice(arrival_cities)
+            
             flight_data = {
                 'airline_name': airline_name,
                 'flight_name': flight_name,
                 'flight_status': flight_status,
-                'departure_airport': 'New York',
-                'arrival_airport': 'Cancun'
+                'departure_airport': departure_city,
+                'arrival_airport': arrival_city
             }
             
             flight_iata = item.get('flight_iata')

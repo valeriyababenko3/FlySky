@@ -63,19 +63,31 @@ def search_flights():
     arrival_date = request.args.get('arrivalDate')
 
     cursor = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    query = "SELECT * FROM flights WHERE departure_airport ILIKE %s AND arrival_airport ILIKE %s"
+#     SELECT * FROM flights
+# WHERE departure_airport LIKE '%New York%'
+#   AND arrival_airport LIKE '%Cancun%'
+#   AND DATE(departure) = '2023-10-13';
+    query = "SELECT * FROM flights WHERE departure_airport LIKE %s AND arrival_airport LIKE %s"
     query_params = (f"%{search_departure}%", f"%{search_arrival}%")
 
     if departure_date:
-        query += " AND departure= %s"
+        query += " AND DATE(departure)= %s"
         query_params += (departure_date,)
 
     if arrival_date:
-        query += " AND arrival = %s"
+        query += " AND DATE(arrival) = %s"
         query_params += (arrival_date,)
+        
+    print(query_params)
+    print(departure_date)
+    print(arrival_date)
+    print(search_departure)
+    print(search_arrival)
 
     cursor.execute(query, query_params)
     result = cursor.fetchall()
+    print("result")
+    print(result)
     cursor.close()
 
     return jsonify({"flights": result})

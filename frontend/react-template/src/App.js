@@ -8,6 +8,7 @@ import Header from "./components/Header/header";
 import MainContent from "./components/HomePage/MainPage";
 import Footer from "./components/Footer/Footer";
 import { UserProvider } from "./components/UserProvide";
+import SearchResults from "./components/SearchResults";
  // Import the UserProvider
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           <Route exact path="/booking" element={<Booking/>} />
           <Route exact path="/userprofile" element={<FilteredFlights/>} />
           <Route exact path="/" element={<MainContent />}/>
+          <Route exact path="/search" element={<SearchResults />}/>
         </Routes> 
         <Footer />
       </div>
