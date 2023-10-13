@@ -1,15 +1,8 @@
+import { useLocation, useNavigate } from "react-router-dom"
 import "../../styles/flightcard.css"
+import React, { useState } from "react"
 
-function FlightCard(flight){
-    flight = flight.flight
-    console.log(flight)
-    const departingDay = ""
-    const duration = ""
-    const stops = ""
-    const price = ""
-    const departTime = ""
-    const arrivalTime = ""
-
+function FlightCard({flight, userId}){
     const getDate = (dateString) => {
         const date = new Date(dateString)
         const hours = date.getHours();
@@ -22,58 +15,115 @@ function FlightCard(flight){
         return formattedTime
     }
 
+    const generateRandomSeatNumbers = (numSeats) => {
+        const seats = [];
+        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      
+        for (let i = 1; i <= numSeats; i++) {
+          const letter = letters[Math.floor(Math.random() * letters.length)]; // Random letter
+          seats.push(`Seat ${letter}${i}`);
+        }
+      
+        seats[0] = 'select a seat'
+        console.log(seats)
+        return seats;
+    };
+    
+    const [selectedSeat, setSelectedSeat] = useState('');
+    const [availableSeats, setAvailableSeats] = useState(generateRandomSeatNumbers(50))
+
+    const startTime = new Date(flight.departure)
+    const endTime = new Date(flight.arrival)
+    const durationInMinutes = (endTime - startTime) / (1000 * 60)
+    const hours = Math.floor(durationInMinutes / 60)
+    const minutes = durationInMinutes % 60
+
+    const stops = "NonStop"
+    const price = hours * 174
+    const departTime = getDate(flight.departure)
+    const arrivalTime = getDate(flight.arrival)
+    const flightName = flight.flight_name
+    const flightId = flight.id
+
+    const navigate = useNavigate(); 
+    const location = useLocation();
+
+    const handleCheckout = (e) => {
+        e.preventDefault()
+        if(location.pathname === '/booking'){
+            fetch('http://localhost:5000/api/flights/user_flights', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({userId, flightId})
+            }).then((response) => {
+                if (response.status == 200) {
+                    return response.json();
+                } else {
+                    console.log(response.status)
+                    throw new Error('Failed to create user flight')
+                }
+            })
+        } else {
+            navigate('/booking', {state: {'flight': flight, 'userId': userId}})
+        }
+    }
+
+    const handleSeatSelection = (e) => {
+        e.preventDefault()
+        const newSelectedSeat = e.target.value;
+        setSelectedSeat(newSelectedSeat);
+    };
+
     return (
-        <div>
+        <div className="flight-card-container">
+            <div className="flight-card-departing-info">
+                <div className="flight-card-dep-and-arr-times">
+                    <p className="depart-time">
+                        {departTime} 
+                    </p>
+                    <p>></p>
+                    <p className="arrival-time">
+                        {arrivalTime}
+                    </p>
+                </div>
+            </div>
             <div>
-                <p>Trip Summary</p>
-                <div className="flight-card-container">
-                    <div className="flight-card-departing-info">
-                        <p>Departing: </p>
-                        <div className="flight-card-dep-and-arr-times">
-                            <p className="depart-time">
-                                {getDate(flight.departure)}
-                            </p>
-                            <p className="arrival-time">
-                                {getDate(flight.arrival)}
-                            </p>
-                        </div>
-                    </div>
-                    <div className="flight-card-duration">
-                        {duration}
-                    </div>
-                    <div className="flight-card-stops">
-                        {stops}
-                    </div>
-                    <div className="flight-card-price">
-                        {price}
-                    </div>
+                <div className="flight-card-duration">
+                    {`${hours}h ${minutes}m`}
+                </div>
+                <div className="flight-card-flight-name">
+                    {flightName}
+                </div>
+            </div>
+            <div className="flight-card-stops">
+                {stops}
+            </div>
+            <div className="flight-card-price-container">
+                <p className="flight-card-from">From</p>
+                <div className="flight-card-price">
+                    {`$${price}`}
+                </div>
+            </div>
+            <div className="flight-card-seat-selection">
+                <select value={selectedSeat} onChange={(e) => handleSeatSelection(e)}>
+                    {availableSeats.map((seat, index) => (
+                        <option key={index} value={seat}>
+                            {seat}  
+                        </option>
+                    ))}
+                </select>
+            </div>
+            <div>
+                <div>
+                    <button onClick={handleCheckout} className="checkout-btn">
+                        Checkout
+                    </button>
                 </div>
             </div>
         </div>
     )
 }
-
-// <div className='flight' key={index}>
-//           <div className='left-side'>
-//             <div className='top-side'>
-//               <div className='times'>
-//               </div>
-//               <div className='duration'>
-//                 <div className='deptime'>
-//                   <p>Departure: {getDate(flight.departure)}</p>
-//                   <p>Arrival: {getDate(flight.arrival)}</p>
-//                   <p>Duration: </p>
-//                 </div>
-//               </div>
-//               <div className='nonstop'>
-//                 Flight Status: {flight.flight_status}
-//               </div>
-//             </div>
-//             <div className='bottom'>
-//             </div>
-//           </div>
-//           <div className='right-side'>
-//           </div>
-//         </div>
 
 export default FlightCard

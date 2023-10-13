@@ -88,7 +88,7 @@ def get_flight_data():
     
         flights_data = []
         
-        for item in data[:50]:  
+        for item in data[:15]:  
             airline_name = item.get('airline_iata')  
             flight_name = item.get('flight_iata')  
             flight_status = item.get('status')
@@ -134,13 +134,18 @@ def save_flight_data(flights_data):
         airline_name = item.get('airline_name')  
         flight_name = item.get('flight_name')  
         flight_status = item.get('flight_status') 
-        
-    # departure = flight_data['departure']['actual']
-    # arrival = flight_data['arrival']['actual']
-    # airline_name = flight_data['airline']['name']
-    # flight_name = flight_data['flight']['number']
-    # flight_status = flight_data['flight_status']
     
+        if not departure:
+            item['departure'] = 'NA'
+        if not arrival:
+            item['arrival'] = 'NA'
+        if not airline_name:
+            item['airline_name'] = 'NA'
+        if not flight_name:
+            item['flight_name'] = 'NA'
+        if not flight_status:
+            item['flight_status'] = 'NA'
+            
         flight = Flight(None, departure, arrival, airline_name, flight_name, flight_status)
         print(flight)
         success = flight.save_flight_data(flight)
@@ -173,10 +178,12 @@ def get_flight_details(flight_id):
 @flight_requests.route('/user_flights', methods=['POST'])
 def create_user_flight():
     data = request.get_json()
+    print('data')
+    print(data)
 
     if data:
-        user_id = data.get('user_id')
-        flight_id = data.get('flight_id')
+        user_id = data.get('userId')
+        flight_id = data.get('flightId')
 
         if UserFlight.flight_exists(user_id, flight_id):
             return jsonify({"error": "User flight already exists"}), 400
@@ -185,9 +192,29 @@ def create_user_flight():
         success = user_flight.save_user_flight()
 
         if success:
-            return jsonify({"message": "User flight created successfully"}), 201
+            return jsonify({"message": "User flight created successfully"}), 200
         else:
             return jsonify({"error": "Failed to create user flight"}), 500
+    else:
+        return jsonify({"error": "Invalid data format"}), 400
+    
+@flight_requests.route('/user_flights', methods=['DELETE'])
+def delete_user_flight():
+    data = request.get_json()
+
+    if data:
+        user_id = data.get('user_id')
+        flight_id = data.get('flight_id')
+
+        if UserFlight.flight_exists(user_id, flight_id):
+            success = Flight.delete_flight(flight_id, user_id)
+            
+            if success:
+                return jsonify({"message": f"User flight with ID {flight_id} was deleted successfully"}), 200
+            else:
+                return jsonify({"error": "Failed to delete user flight"}), 500
+        else:
+            return jsonify({"error": "User flight already exists"}), 400
     else:
         return jsonify({"error": "Invalid data format"}), 400
     
@@ -196,11 +223,12 @@ def create_user_flight():
 @login_required
 @flight_requests.route('/user_flights/<int:user_id>', methods=['GET'])
 def get_all_user_flights(user_id):
+    print("in route")
     try:
         user_flights = UserFlight.get_user_flights(user_id)
 
         if user_flights:
-            return jsonify({"user_flights": user_flights}), 200
+            return jsonify({'flights': user_flights}), 200
         else:
             return jsonify({"message": "No user flights found for this user"}), 404
     except Exception as e:
@@ -237,8 +265,8 @@ def get_saved_flight_data():
     except Exception as e:
         print(f"Error fetching flights: {e}")
         return jsonify({"error": "Failed to retrieve flights"}), 500
-
-
+    
+    
 #delete one flight from db
 @flight_requests.route('/<int:flight_id>', methods=['DELETE'])
 def delete_flight(flight_id):

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import "../../styles/login.css";
+import Cookies from 'js-cookie';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -21,9 +22,11 @@ function Login() {
           password: password,
         }),
       });
-
       if (response.status === 200) {
-        // Login successful, you can redirect to the home page or perform any other actions
+        const userSession = await response.json();
+        const sessionToken = userSession.session.session_token
+        Cookies.set('session_token', sessionToken, {expires: 1})
+        // u can redirect to the home page or perform any other actions
         window.location.href = '/'; // Redirect to the home page
       } else {
         // Login failed, handle errors accordingly

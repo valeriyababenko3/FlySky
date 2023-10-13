@@ -5,6 +5,7 @@ import Login from "./components/Login/login";
 import Register from "./components/Register/register";
 import NavBar from "./components/NavBar";
 import Booking from "./components/Booking";
+import FilteredFlights from "./components/FilteredFlightsPage";
 
 function App() {
   return (
@@ -14,7 +15,8 @@ function App() {
         <Route exact path="/login" element={<Login/>} />
         <Route exact path="/register" element={<Register/>} />
         <Route exact path="/booking" element={<Booking/>} />
-      </Routes>
+        <Route exact path="/userflights" element={<FilteredFlights/>} />
+      </Routes> 
       {/* <NavBar />
       <FlightData /> */}
     </div>

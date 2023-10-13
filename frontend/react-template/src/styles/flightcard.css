@@ -1,5 +1,39 @@
 .flight-card-container {
     background-color: white;
-    height: 200px;
+    height: 90px;
+    width: 51%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
 }
 
+.flight-card-dep-and-arr-times{
+    width: 150px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.flight-card-price-container {
+    height: 60px;
+}
+
+.flight-card-from {
+    font-size: 10px;
+    margin-bottom: 4px;
+}
+
+.flight-card-price {
+    font-weight: 800;
+}
+
+.checkout-btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.flight-card-edit-btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
