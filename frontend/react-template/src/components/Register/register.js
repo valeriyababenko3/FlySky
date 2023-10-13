@@ -9,6 +9,11 @@ function Register() {
   const [flashMessages, setFlashMessages] = useState([]);
 
   useEffect(() => {
+    if (sessionStorage.getItem('loggedin')) {
+      // User is already logged in, redirect to the home page
+      window.location.href = '/';
+      return;
+    }
     // Fetch flash messages from the backend during component initialization
     fetch('http://localhost:5000/get-flash-messages')
       .then((response) => response.json())
@@ -174,7 +179,7 @@ function Register() {
                 className="form-control btn btn-primary"
               />
               <p style={{ padding: '5px' }}>
-                Already have an account? <a href="/login">Login</a>
+                Already have an account? <a href="/login" className="btn btn-dark">Login</a>
               </p>
             </form>
           </div>

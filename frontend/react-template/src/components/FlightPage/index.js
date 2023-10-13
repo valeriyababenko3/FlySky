@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react'
 import FlightCard from '../FlightCard';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 function FlightData() {
   const [flightData, setFlightData] = useState([]);
@@ -11,6 +13,13 @@ function FlightData() {
   const [userId, setUserId] = useState(null)
   const sessionToken = Cookies.get('session_token');
   const navigate = useNavigate()
+  const [searchDeparture, setSearchDeparture] = useState('');
+  const [searchArrival, setSearchArrival] = useState('');
+  const [departureDate, setDepartureDate] = useState(null);
+  const [arrivalDate, setArrivalDate] = useState(null);
+  const [filters, setFilters] = useState({
+    airline: '',
+  });
 
   useEffect(() => {
     if (sessionToken) {
