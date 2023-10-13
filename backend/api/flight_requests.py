@@ -126,7 +126,6 @@ def get_flight_data():
 #save the flight data from the third party api to the database
 @flight_requests.route('/api_data', methods=['GET'])
 def save_flight_data(flights_data):
-    print(flight_data)
     errors = []
     for item in flights_data:
         departure = item.get('departure')  
@@ -178,8 +177,6 @@ def get_flight_details(flight_id):
 @flight_requests.route('/user_flights', methods=['POST'])
 def create_user_flight():
     data = request.get_json()
-    print('data')
-    print(data)
 
     if data:
         user_id = data.get('userId')

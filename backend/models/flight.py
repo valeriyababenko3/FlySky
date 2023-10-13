@@ -20,9 +20,6 @@ class Flight:
 
     def save_flight_data(self, flight):
         try:
-            print(flight.departure)
-            print(flight.arrival)
-            print(flight.airline_name)
             sql_query = """
                 INSERT INTO flights (departure, arrival, airline_name, flight_name, flight_status) 
                 VALUES (%s, %s, %s, %s, %s)
@@ -82,7 +79,6 @@ class Flight:
 
             db.execute(sql_query)
             flights_data = db.fetch_results(True)
-            print("here1")
             # cursor.close()
             flights = []
             for flight_data in flights_data:

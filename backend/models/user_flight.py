@@ -88,8 +88,6 @@ class UserFlight:
         
     @classmethod
     def flight_exists(cls, user_id, flight_id):
-        print(user_id)
-        print(flight_id)
         try:
             sql_query = "SELECT * FROM user_flights WHERE user_id = %s AND flight_id = %s"
             params = (user_id, flight_id)
