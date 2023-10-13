@@ -1,0 +1,140 @@
+
+body {
+    font-family: Arial, sans-serif;
+    /* background-image: url(C:\Users\19293\Documents\Interapt\Programming\Python\Labs\1000\landing-page\public\main2.jpg); */
+  }
+  
+  .header-style {
+    background-color: #1b3045;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    font-family: 'Courier New', sans-serif; 
+    font-size: 24px; 
+    font-weight: bold;
+  }
+  
+  main {
+    padding: 50px;
+  }
+  
+  section {
+    margin-bottom: 20px;
+  }
+  
+  footer {
+    text-align: center;
+    background-color: #1b3045;
+    color: white;
+    padding: 5px;
+  }
+  footer a {
+    color: #fafafa; 
+    text-decoration: none; 
+  }
+
+  
+  .square-window {
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    height: 400px;
+    width: 1000px;
+    height: 100vh;
+    
+  }
+  
+  .square {
+    width: 90%;
+    height: 90%;
+    /* background-image: url(C:\Users\19293\Documents\Interapt\Programming\Python\Labs\1000\landing-page\public\background.jpg);  */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  
+  
+  /* Labels */
+  .square p {
+    color: rgb(8, 5, 57);
+    font-weight: bold;
+    font-size: 40px; 
+    margin: 0; 
+  }
+  header nav {
+    text-align: right;
+  }
+  
+  header nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  header nav ul li {
+    display: inline-block;
+    margin-right: 20px; 
+  }
+  
+  header nav ul li:last-child {
+    margin-right: 0; 
+  }
+  
+  header nav ul li a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    font-size: 16px; 
+  }
+  
+  header nav ul li a:hover {
+    text-decoration: underline; 
+  }
+  .flight-options {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    
+  }
+  
+  .flight-options button {
+    background-color:	#8196ab;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .flight-options button.active {
+    background-color: #1b3045;
+  }
+  .date-pickers {
+    display: flex; 
+    justify-content: space-between; 
+    margin-top: 40px;
+  }
+  
+  
+  .flight-date-picker {
+    flex: 1;
+  }
+  .flight-search-button{
+  
+  border: none;
+  color: white;
+  padding: 20px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+    
+  }
+
+  .logo {
+    height: auto; 
+    margin: 1px; 
+  }
+
+  

@@ -79,43 +79,25 @@ function FlightData() {
   }
 
   const handleSearch = async () => {
-
     try {
-
       const departureDateString = departureDate ? departureDate.toISOString().split('T')[0] : '';
-
       const arrivalDateString = arrivalDate ? arrivalDate.toISOString().split('T')[0] : '';
-
- 
-
       const searchResponse = await fetch(
-
         `http://localhost:5000/search-flights?departure=${searchDeparture}&arrival=${searchArrival}&departureDate=${departureDateString}&arrivalDate=${arrivalDateString}`
-
       );
 
       if (!searchResponse.ok) {
-
         throw new Error(`HTTP error! Status: ${searchResponse.status}`);
-
       }
-
       const searchResult = await searchResponse.json();
-
       setFlightData(searchResult.flights);
-
     } catch (error) {
-
       console.error('Error searching for flights:', error);
-
       setError('An error occurred while searching for flights.');
-
     }
-
   };
 
  
-
   const handleFilter = async () => {
 
     try {
@@ -153,90 +135,50 @@ function FlightData() {
 <h2>Flight Search</h2>
 
 <input
-
   type='text'
-
   placeholder='Departure Airport'
-
   value={searchDeparture}
-
   onChange={(e) => setSearchDeparture(e.target.value)}
-
 />
 
 <input
-
   type='text'
-
   placeholder='Arrival Airport'
-
   value={searchArrival}
-
   onChange={(e) => setSearchArrival(e.target.value)}
-
 />
 
 <div className='date-pickers'>
-
   <div>
-
     <label>Departure Date:</label>
-
     <DatePicker
-
       selected={departureDate}
-
       onChange={(date) => setDepartureDate(date)}
-
       placeholderText='Select a Date'
-
     />
-
   </div>
-
   <div>
-
     <label>Arrival Date:</label>
-
     <DatePicker
-
       selected={arrivalDate}
-
       onChange={(date) => setArrivalDate(date)}
-
       placeholderText='Select a Date'
-
     />
-
   </div>
-
 </div>
-
 <button onClick={handleSearch}>Search</button>
-
 </div>
-
 <div>
-
 <h2>Flight Filter</h2>
-
 <input
-
   type='text'
-
   placeholder='Airline'
-
   value={filters.airline}
-
   onChange={(e) => setFilters({ ...filters, airline: e.target.value })}
-
 />
-
 <button onClick={handleFilter}>Apply Filters</button>
-
 </div>
       <button onClick={handleClick}>
-
       </button>
      {flightData.map((flight, index) => (
         <FlightCard flight={flight} userId={userId} /> 
