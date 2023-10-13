@@ -57,7 +57,7 @@ function FlightData() {
           }
           const flightData = await flightResponse.json();
           setFlightData(Object.values(flightData)[0]);
-        } else if (location.pathname === '/userflights') {
+        } else if (location.pathname === '/userprofile') {
           const userFlightsResponse = await fetch(`http://localhost:5000/api/flights/user_flights/${userId}`);
           if (!userFlightsResponse.ok) {
             throw new Error(`HTTP error! Status: ${userFlightsResponse.status}`);
@@ -73,11 +73,6 @@ function FlightData() {
 
     fetchData();
   }, [sessionToken, location.pathname, userId]);
-
-  const handleClick = (e) => {
-    e.preventDefault()
-    navigate('/userflights')
-  }
 
   const handleSearch = async () => {
     try {
@@ -179,8 +174,6 @@ function FlightData() {
 />
 <button onClick={handleFilter}>Apply Filters</button>
 </div>
-      <button onClick={handleClick}>
-      </button>
      {flightData.map((flight, index) => (
         <FlightCard flight={flight} userId={userId} /> 
     ))}

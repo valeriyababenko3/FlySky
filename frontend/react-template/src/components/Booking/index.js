@@ -19,7 +19,9 @@ function Booking(){
                 <p className="booking-heading-one">My FlySky Trip</p>
                 <p className="booking-heading-two">{flightConfimation}</p>
             </div>
-            <FlightCard flight={flight} userId={userId} callback={setFlightConfirmation}/>
+            <div className="booking-card-container">
+                <FlightCard flight={flight} userId={userId} callback={setFlightConfirmation}/>
+            </div>
             <button className="flight-card-edit-btn">
                 Edit {editIcon}
             </button>

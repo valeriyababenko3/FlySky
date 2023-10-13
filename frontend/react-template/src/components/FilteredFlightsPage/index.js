@@ -2,7 +2,7 @@ import FlightData from "../FlightPage";
 
 function FilteredFlights(){
     return (
-        <div>
+        <div className="userflights-container">
             <FlightData />
         </div>
     )

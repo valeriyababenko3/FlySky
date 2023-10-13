@@ -6,7 +6,7 @@ const Logo = () => {
   return (
     <div className="logo">
       <a className='logo-link' href='/'>
-        <img src="/logo.jpg" alt="Logo" /> 
+        <img src="/home/dashv/Projects/FlySky/FlySky/frontend/react-template/src/images/logo.jpg" alt="Logo" /> 
       </a>
     </div>
   );

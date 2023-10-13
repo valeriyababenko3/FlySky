@@ -1,18 +1,24 @@
 .booking-main {
-    background-color: blue;
-    width: 100%;
-    height: 98vh;
+    width: 70%;
+    height: 840px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    margin: 0 auto;
 }
 
 .booking-heading {
-    color: white;
+    color: #1b3045;
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.booking-card-container {
+    height: 90px;
+    width: 50%;
+    border: 1px solid #1b3045;
 }
 
 .booking-heading-one {

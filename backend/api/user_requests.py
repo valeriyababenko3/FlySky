@@ -106,17 +106,14 @@ def get_user_name():
         return jsonify({"message": "Missing userId parameter"}, 400)
     
 #a user should only be able to logout when logged in
-
-@cross_origin() 
-@user_requests.route('/logout', methods=['POST'])  # Change the HTTP method to POST
-@login_required
-def logout():
-    if 'loggedin' in session:
-        session.pop('loggedin', None)
-        session.pop('id', None)
-        session.pop('username', None)
-        session.pop('session_token', None)  
-
-        return jsonify({"message": "Logged out successfully"})  # Return a response
-
-    return jsonify({"message": "Not logged in"}, 400)  # Return a response for the case when the user is not logged in
+# @cross_origin() 
+# @user_requests.route('/<int:user_id>/logout', methods=['POST'])  # Change the HTTP method to POST
+# @login_required
+# def logout(user_id):
+#     print("here")
+#     print(user_id)
+#     if user_id:
+#         User.delete_session(user_id)
+#         return jsonify({"message": "Logged out successfully"})
+#     else:
+#         return jsonify({"error": "Session data missing"}, 400)

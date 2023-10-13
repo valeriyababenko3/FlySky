@@ -21,9 +21,9 @@ const MainContent = () => {
             <div>
               <FlightSearchButton />
             </div>
+            </div>
+            </div>
             <FlightData />
-            </div>
-            </div>
         </div>
         
     </main>

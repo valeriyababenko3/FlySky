@@ -19,9 +19,9 @@ function App() {
           <Route exact path="/login" element={<Login/>} />
           <Route exact path="/register" element={<Register/>} />
           <Route exact path="/booking" element={<Booking/>} />
-          <Route exact path="/userflights" element={<FilteredFlights/>} />
+          <Route exact path="/userprofile" element={<FilteredFlights/>} />
+          <Route exact path="/" element={<MainContent />}/>
         </Routes> 
-        <MainContent />
         <Footer />
       </div>
     </UserProvider>

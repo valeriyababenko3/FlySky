@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../../styles/styles.css';
 import { useUser } from '../UserProvide';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import Cookies from 'js-cookie';
 
 const NavBar = () => {
   const { sessionToken, userId } = useUser();
@@ -41,29 +42,14 @@ const NavBar = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleLogout = () => {
-    // Remove user session information, e.g., by making an API call to log out
-    // Then navigate to the logout route
-    // Replace 'api/logout' with the actual logout API endpoint
-    fetch('http://localhost:5000/api/users/logout', {
-      method: 'POST',
-      headers: {
-        'Authorization': sessionToken, // Include session token in the headers if required
-      },
-    })
-      .then(response => {
-        if (response.ok) {
-          // Log out was successful
-          navigate('/logout'); // Navigate to the logout route
-        } else {
-          // Handle any errors, e.g., display an error message
-          console.error('Logout failed');
-        }
-      })
-      .catch(error => {
-        console.error('Error during logout:', error);
-      });
+  const handleLogout = async () => {
+      Cookies.remove('session_token');
   };
+  
+  const handleProfileClick = (e) => {
+    e.preventDefault()
+    navigate('/userprofile'); // Navigate to the logout route
+  }
 
   return (
     <nav>
@@ -76,7 +62,7 @@ const NavBar = () => {
             </a>
             {isDropdownOpen && (
               <div className="dropdown-content">
-                <a>Profile</a>
+                <a onClick={handleProfileClick}>Profile</a>
                 <a>Settings</a>
                 <a onClick={handleLogout}>Logout</a> {/* Handle Logout click */}
               </div>

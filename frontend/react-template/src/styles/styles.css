@@ -1,7 +1,7 @@
 
 body {
     font-family: Arial, sans-serif;
-    /* background-image: url(C:\Users\19293\Documents\Interapt\Programming\Python\Labs\1000\landing-page\public\main2.jpg); */
+    background-image: url(/home/dashv/Projects/FlySky/FlySky/frontend/react-template/src/images/main2.jpg);
   }
   
   .header-style {
@@ -43,7 +43,7 @@ body {
   .square {
     width: 90%;
     height: 90%;
-    /* background-image: url(C:\Users\19293\Documents\Interapt\Programming\Python\Labs\1000\landing-page\public\background.jpg);  */
+    background-image: url(/home/dashv/Projects/FlySky/FlySky/frontend/react-template/src/images/background.jpg); 
     display: flex;
     flex-direction: column;
     align-items: center;

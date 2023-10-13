@@ -61,6 +61,19 @@ class User():
             return "Error creating session"
         
     @classmethod
+    def delete_session(cls, user_id):
+        try:
+            sql_query = "UPDATE users SET session_token = NULL WHERE id = %s"
+            params = (user_id)
+            print("view")
+
+            db.execute(sql_query, params)
+            db.commit()
+            print('deleted successfully')
+        except Exception as e:
+            print(f"Error deleting user session: {e}")
+            
+    @classmethod
     def find_by_session_token(cls, session_token):
         try:
             sql_query = "SELECT id FROM users WHERE session_token = %s"

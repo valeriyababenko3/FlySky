@@ -62,9 +62,9 @@ function FlightCard({flight, userId, callback}){
                 if (response.status == 200) {
                     callback('Booking Confimed!')
                     return response.json();
-                } else {
-                    console.log(response.status)
-                }
+                } else if(response.status == 400){
+                    callback('Already Booked!')
+                } 
             })
         } else {
             navigate('/booking', {state: {'flight': flight, 'userId': userId}})
