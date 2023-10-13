@@ -3,8 +3,7 @@ import React, { useEffect, useState } from 'react'
 import FlightCard from '../FlightCard';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+
 
 function FlightData() {
   const [flightData, setFlightData] = useState([]);
@@ -13,10 +12,6 @@ function FlightData() {
   const [userId, setUserId] = useState(null)
   const sessionToken = Cookies.get('session_token');
   const navigate = useNavigate()
-  const [searchDeparture, setSearchDeparture] = useState('');
-  const [searchArrival, setSearchArrival] = useState('');
-  const [departureDate, setDepartureDate] = useState(null);
-  const [arrivalDate, setArrivalDate] = useState(null);
   const [filters, setFilters] = useState({
     airline: '',
   });
@@ -92,6 +87,10 @@ function FlightData() {
       setError('An error occurred while searching for flights.');
     }
   };
+  const handleClick = (e) => {
+    e.preventDefault()
+    navigate('/userflights')
+  }
 
  
   const handleFilter = async () => {
@@ -128,41 +127,6 @@ function FlightData() {
     <div className='container'>
       <div>
 
-<h2>Flight Search</h2>
-
-<input
-  type='text'
-  placeholder='Departure Airport'
-  value={searchDeparture}
-  onChange={(e) => setSearchDeparture(e.target.value)}
-/>
-
-<input
-  type='text'
-  placeholder='Arrival Airport'
-  value={searchArrival}
-  onChange={(e) => setSearchArrival(e.target.value)}
-/>
-
-<div className='date-pickers'>
-  <div>
-    <label>Departure Date:</label>
-    <DatePicker
-      selected={departureDate}
-      onChange={(date) => setDepartureDate(date)}
-      placeholderText='Select a Date'
-    />
-  </div>
-  <div>
-    <label>Arrival Date:</label>
-    <DatePicker
-      selected={arrivalDate}
-      onChange={(date) => setArrivalDate(date)}
-      placeholderText='Select a Date'
-    />
-  </div>
-</div>
-<button onClick={handleSearch}>Search</button>
 </div>
 <div>
 <h2>Flight Filter</h2>
