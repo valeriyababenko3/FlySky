@@ -1,7 +1,6 @@
 import React from 'react';
 import FlightOptions from './buttons';
 import FlightDateTimePicker from './FlightDatePicker';
-import FlightSearchButton from './flightsearchbutton';
 import "../../styles/styles.css"
 import FlightData from '../FlightPage';
 
@@ -15,11 +14,7 @@ const MainContent = () => {
             <p><h2>Flights</h2></p>
             <FlightOptions />
             <div className="date-pickers">  
-            <FlightDateTimePicker label="Departure Date" /> 
-            <FlightDateTimePicker label="Arriving Date" />
-            </div>
-            <div>
-              <FlightSearchButton />
+            <FlightDateTimePicker /> 
             </div>
             <FlightData />
             </div>
